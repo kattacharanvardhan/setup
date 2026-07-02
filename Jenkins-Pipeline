@@ -1,0 +1,42 @@
+pipeline{
+    agent any
+    stages{
+        stage('checkout'){
+            steps{
+                git 'https://github.com/kattacharanvardhan/java-project-maven-new.git'
+            }
+        }
+        stage('Build'){
+            steps{
+                sh 'mvn compile'
+            }
+        }
+        stage('Test'){
+            steps{
+                sh 'mvn test'
+            }
+        }
+        stage('Package'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+        stage('Code Review'){
+            steps{
+                echo 'Code Reviewed by SonarQube'
+            }
+        }
+        stage('Artifact-S3'){
+            steps{
+                echo 'Store in s3 the war file'
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'artifact-s3-store-jenkins/', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'ap-south-1', showDirectlyInBrowser: false, sourceFile: '**/*.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: true]], pluginFailureResultConstraint: 'FAILURE', profileName: 's3', userMetadata: []
+            }
+        }
+        stage('Deploy'){
+            steps{
+                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: 'tomcatcreds', path: '', url: 'http://13.233.231.36:8080/')], contextPath: 'hostarapplication', war: 'target/*.war'
+                echo 'Deploying in Tomcat'
+            }
+        }
+    }
+}
