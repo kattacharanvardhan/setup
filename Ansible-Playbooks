@@ -338,9 +338,13 @@
          name: httpd
          state: started
          enabled: yes
+       ignore_errors: yes
      - name: start docker
        service:
          name: docker
          state: started
          enabled: yes
+       ignore_errors: yes
 ...
+
+18)
