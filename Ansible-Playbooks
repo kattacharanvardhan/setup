@@ -115,3 +115,49 @@
        debug:
          msg: all done
 ...
+
+8) Create playbook for install nginx and start and enable service (default path of nginx = /usr/share/nginx/html)
+---
+ - name: install nginx and start and enable nginx
+   hosts: all
+   become: yes
+   tasks:
+     - name: install nginx
+       yum:
+         name: nginx
+         state: present
+     - name: enable and start nginx
+       service:
+         name: nginx
+         state: started
+         enabled: yes
+...
+
+9) Create Playbook for install nginx,start,enable and deploy sample application 
+---
+ - name: install nginx,start,enable,deploy app
+   hosts: all
+   become: yes
+   tasks:
+     - name: install nginx
+       yum:
+         name: nginx
+         state: present
+     - name: enable and start nginx
+       service:
+         name: nginx
+         state: started
+         enabled: yes
+     - name: deploy application
+       copy:
+         src: index.html
+         dest: /usr/share/nginx/html/index.html
+     - name: restart service
+       service:
+         name: nginx
+         state: restarted
+         enabled: yes
+     - name: message
+       debug:
+         msg: deployed
+...
