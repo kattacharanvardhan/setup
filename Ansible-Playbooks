@@ -347,4 +347,218 @@
        ignore_errors: yes
 ...
 
-18)
+18) Create Playbook for running linux commands directly using shell,raw,command modules
+---
+ - name: run linux commands in playbook using shell,raw,command modules
+   hosts: all
+   become: yes
+   gather_facts: false
+   tasks:
+     - name: shell module
+       shell: yum install -y git
+     - name: raw module
+       raw: df -Th
+     - name: command module
+       command: yum install -y docker
+     - name: message
+       debug:
+         msg: shell,raw,command modules
+...
+
+19) Create Playbook for Install httpd on redhat os and install apache2 on debian os(ubuntu) like conditions using when module
+---
+ - name: Install httpd on redhat os and install apache2 on debian os(ubuntu)
+   hosts: all
+   become: yes
+   gather_facts: yes
+   tasks:
+     - name: Install httpd on redhat os
+       yum:
+         name: httpd
+         state: present
+       when: ansible_os_family == "RedHat"
+       tags: redhat
+     - name: Install apache2 on debian os
+       apt:
+         name: apache2
+         state: present
+       when: ansible_os_family == "Debian"
+       tags: debian
+     - name: print message
+       debug:
+         msg: works when redhat os means httpd installs and debian os means apache2 installs
+       tags: message
+...
+
+20) Create Playbook for LAMP(linux,apache,mysql,python) project playbook 
+---
+ - name: LAMP playbook
+   hosts: all
+   become: yes
+   tasks:
+     - name: Install httpd
+       yum:
+         name: httpd
+         state: present
+     - name: Install mysql
+       yum:
+         name: mysql
+         state: present
+       ignore_errors: yes
+     - name: Install python3
+       yum:
+         name: python3
+         state: present
+     - name: message
+       debug:
+         msg: LAMP is done (linux,apache,mysql,python)
+...
+
+21) Create Playbook for View content from playbook of file(/root/creds.txt == having credentials)
+---
+ - name: View content from playbook of file
+   hosts: all
+   become: yes
+   vars:
+     creds: "{{lookup('file','/root/creds.txt')}}"
+   tasks:
+     - name: view content
+       debug:
+         msg: my credentials is "{{creds}}"
+...
+
+22) Create Playbook for replace nginx.conf file in slave machines using jinja2 templates
+vi nginx.conf.j2
+server{
+   listen {{nginx_value}};
+   server_name {{server_name}};
+   location /{
+        root {{web_root}};
+        index index.html;
+   }
+}
+vi playbook.yml
+---
+ - name: replace nginx configuration file in slave machines(/etc/nginx/nginx.conf) using jinja2 template
+   hosts: all
+   become: yes
+   vars:
+     nginx_value: 80
+     server_name: nginx-server
+     web_root: /var/www/html
+   tasks:
+     - name: Install nginx
+       yum:
+         name: nginx
+         state: present
+     - name: Copy Nginx conf file to slave
+       copy:
+         src: /root/templates/nginx.conf.j2 
+         dest: /etc/nginx/nginx.conf
+...
+
+22) Create Playbook for ansible strategy is free,free,host-pinned,debug
+---
+ - name: ansible strategy is free,free,host-pinned,debug
+   hosts: all
+   become: yes
+   strategy: free
+   tasks:
+     - name: install nginx
+       yum:
+         name: nginx
+         state: absent
+     - name: create user
+       user:
+         name: charan
+         state: absent
+     - name: install git
+       yum:
+         name: git
+         state: present
+...
+
+23)  Create Playbook for ansible roles is used divide playbook into directory tree struture and reusable the code(write once,use many times)
+mkdir playbook
+cd playbook
+mkdir roles/pkgs/tasks
+mkdir roles/users/tasks
+mkdir roles/webserver/tasks
+====> create 3 roles of playbook and mention roles in one master playbook it is out the roles folder <=====
+
+vi roles/pkgs/tasks/main.yml
+---
+ - name: Install Packages
+   yum:
+     name: "{{item}}"
+     state: present
+   with_items:
+     - git
+     - docker
+     - maven
+     - tree
+...
+vi roles/users/tasks/main.yml
+---
+ - name: creating user
+   user:
+     name: "{{item}}"
+     state: present
+   loop:
+     - charanvardhan
+     - pallavi
+     - nandhini
+...
+vi roles/webserver/tasks/main.yml
+---
+ - name: install nginx
+   yum:
+     name: nginx
+     state: present
+...
+vi playbook/master.yml
+---
+ - name: Master Playbook
+   hosts: all
+   become: yes
+   roles:
+     - pkgs
+     - users
+     - webserver
+...
+
+24) Create Playbook for Install Python pip and numpy and pandas
+---
+ - name: Install Python pip and numpy and pandas
+   hosts: all
+   become: yes
+   tasks:
+     - name: install pip
+       yum:
+         name: pip
+         state: present
+     - name: install numpy
+       pip:
+         name: Numpy
+         state: present
+     - name: install pandas
+       pip:
+         name: pandas
+         state: present
+...
+
+25) Create playbook for async and poll means task should be complete within the give time or else its stops excution playbook here 
+---
+ - name: create playbook for async and poll
+   hosts: all
+   become: yes
+   tasks:
+     - name: Sleep for 30 seconds
+       command: sleep 30
+       async: 20
+       poll: 10
+     - name: Install Git
+       user:
+         name: git
+         state: present
+...
