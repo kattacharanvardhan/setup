@@ -1,0 +1,21 @@
+1) Create Docker file with ubuntu base image and update packages,install git,maven,tree,python3 and create file 
+vi Dockerfile
+FROM ubuntu
+RUN  apt update -y
+RUN  apt install git maven tree python3 -y
+RUN  touch file1
+
+2) Create Docker file with ubuntu base image and update patches and install git,python,create file and install tree,mysql-server at container creation time
+vi Dockerfile
+FROM ubuntu
+RUN  apt update -y
+RUN  apt install git python3 -y
+RUN  touch file2
+CMD  apt install mysql-server tree -y
+
+3) Create Docker file with ubuntu base image and copy file to container in tmp directory and also download tomcat tar in container
+vi Dockerfile
+FROM ubuntu
+RUN  apt update -y
+COPY index.html  /tmp
+ADD                     
