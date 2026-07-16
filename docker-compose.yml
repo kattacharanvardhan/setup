@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  internetbanking:
+    image: internetbanking:v1
+    ports:
+      - "81:80"
+    container_name: cont-1
+  loans:
+    image: loans:v1
+    ports:
+      - "82:80"
+    container_name: cont-2
+  mobilebanking:
+    image: mobilebanking:v1
+    ports:
+      - "83:80"
+    container_name: cont-3
+  insurance:
+    image: insurance:v1
+    ports:
+      - "84:80"
+    container_name: cont-4
