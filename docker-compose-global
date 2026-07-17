@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  first:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    deploy:
+      mode: global
+
