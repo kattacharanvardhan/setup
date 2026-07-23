@@ -1,0 +1,35 @@
+#install kubectl aand kops and change permissions and move kubectl and kops tpo /usr/local/bin
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+wget https://github.com/kubernetes/kops/releases/download/v1.32.0/kops-linux-amd64
+chmod +x kops-linux-amd64 kubectl
+mv kubectl /usr/local/bin/kubectl
+mv kops-linux-amd64 /usr/local/bin/kops
+
+# add this this line in .bashrc file
+vi .bashrc
+
+# add this this line in .bashrc file
+export PATH=$PATH:/usr/local/bin/
+:wq!
+
+#run the .bashrc file
+source .bashrc
+
+#create S3 Bucket using cli or console
+aws s3api create-bucket --bucket kops-remote-state --region ap-south-1 --create-bucket-configuration LocationConstraint=ap-south-1
+aws s3api put-bucket-versioning --bucket kops-remote-state --region ap-south-1 --versioning-configuration Status=Enabled
+export KOPS_STATE_STORE=s3://kops-remote-state
+
+#create kops cluster configuration
+kops create cluster --name=charan-kops-cluster.example.com --zones ap-south-1a --master-count=1 --master-size m7i-flex.large --node-count=2 --node-size c7i-flex.large
+
+#Create the AWS resources like master node,worker node,VPC ,EC2 instances, Auto Scaling Groups, Security Groups, Load Balancers, IAM roles, Other AWS resources
+kops update cluster --name=charan-kops-cluster.example.com --yes --admin
+
+#KOPS Commands ==> MOSTLY THESE COMMANDS USED TO CLUSTER EDIT
+kops get cluster                  ==>  to list out of clusters
+kops edit cluster <cluster-name>  ==>  to edit cluster configuration
+kops get ig --name=<cluster-name> ==>  to out instance type of worker and master node
+kops edit ig --name=<cluster-name> nodes-ap-south-1a ==> to edit instance group of worker nodes
+kops edit ig --name=<cluster-name> master-ap-south-1a/control-plane-ap-south-1a ==> to edit instance group of master/control-pane node
+kops update cluster --name=<cluster-name> --yes --admin ==> to create  the AWS resources like nodes(master,worker),vpc,sg,auto-scaling,target groups,etc
