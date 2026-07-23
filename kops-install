@@ -1,4 +1,5 @@
 #install kubectl aand kops and change permissions and move kubectl and kops tpo /usr/local/bin
+
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 wget https://github.com/kubernetes/kops/releases/download/v1.32.0/kops-linux-amd64
 chmod +x kops-linux-amd64 kubectl
@@ -32,4 +33,4 @@ kops edit cluster <cluster-name>  ==>  to edit cluster configuration
 kops get ig --name=<cluster-name> ==>  to out instance type of worker and master node
 kops edit ig --name=<cluster-name> nodes-ap-south-1a ==> to edit instance group of worker nodes
 kops edit ig --name=<cluster-name> master-ap-south-1a/control-plane-ap-south-1a ==> to edit instance group of master/control-pane node
-kops update cluster --name=<cluster-name> --yes --admin ==> to create  the AWS resources like nodes(master,worker),vpc,sg,auto-scaling,target groups,etc
+kops update cluster --name=<cluster-name> --yes --admin ==> to create  the AWS resources like nodes(master,worker),vpc,sg,auto-scaling,target groups,roles,etc
