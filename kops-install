@@ -34,3 +34,8 @@ kops get ig --name=<cluster-name> ==>  to out instance type of worker and master
 kops edit ig --name=<cluster-name> nodes-ap-south-1a ==> to edit instance group of worker nodes
 kops edit ig --name=<cluster-name> master-ap-south-1a/control-plane-ap-south-1a ==> to edit instance group of master/control-pane node
 kops update cluster --name=<cluster-name> --yes --admin ==> to create  the AWS resources like nodes(master,worker),vpc,sg,auto-scaling,target groups,roles,etc
+# delete cluster in one shot
+kops delete cluster \
+  --name=charan-kops-cluster.example.com \
+  --state=s3://kops-remote-state \
+  --yes
