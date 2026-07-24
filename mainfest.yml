@@ -140,3 +140,25 @@ spec:
               image: busybox
               command: ["sh", "-c", "echo 'Hello from BusyBox'"]
           restartPolicy: Never
+
+9) Create DaemonSet using manifest file (Daemonset is like in docker global service one node per one container here one node per one pod)
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: banking-ds
+  labels:
+    app: bank
+spec:
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      containers:
+        - name: bank-cont
+          image: charanvardhan/internetbanking:v1
+
+10) 
