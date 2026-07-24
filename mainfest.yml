@@ -232,4 +232,39 @@ spec:
       targetPort: 80 ==> its pod's container port
       nodePort: 31122 ==> its node port
 
-12) 
+12) Create Deployment and Service LoadBalancer(application will expose using aws load balancer)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-dp
+  labels:
+    app: bank
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      containers:
+        - name: bank-cont
+          image: charanvardhan/mobilebanking:v1
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: banking-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: bank
+  ports:
+    - port: 80
+      targetPort: 80
+
