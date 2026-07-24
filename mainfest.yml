@@ -161,7 +161,7 @@ spec:
         - name: bank-cont
           image: charanvardhan/internetbanking:v1
 
-10) Create Deployment and Service Clusterip
+10) Create Deployment and Service Clusterip(with clusterip we cant expose our application to outside) within cluster only we can access 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -196,7 +196,7 @@ spec:
     - port: 80
       targetPort: 80
 
-11)
+11) Create Deployment and Service NodePort (we can expose application to outside world but with static port number like ec2 node ip public addr and node port range 30000-32767) http://3.6.88.232:31122/
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -228,6 +228,8 @@ spec:
   selector:
     app: bank
   ports:
-    - port: 80
-      targetPort: 80
-      nodePort: 31122
+    - port: 80 ==> its service port
+      targetPort: 80 ==> its pod's container port
+      nodePort: 31122 ==> its node port
+
+12) 
