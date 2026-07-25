@@ -9,6 +9,9 @@ mv kops-linux-amd64 /usr/local/bin/kops
 #Install kops metric server--its heapster
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
+#list out apiversion
+kubectl get apiservices | grep metrics   ==> to list out apiversion
+
 # add this this line in .bashrc file
 vi .bashrc
 
@@ -39,3 +42,6 @@ kops edit ig --name=<cluster-name> master-ap-south-1a/control-plane-ap-south-1a 
 kops update cluster --name=<cluster-name> --yes --admin ==> to create  the AWS resources like nodes(master,worker),vpc,sg,auto-scaling,target groups,roles,etc
 # delete cluster in one shot
 kops delete cluster --name=charan-kops-cluster.example.com --state=s3://kops-remote-state --yes
+
+#uninstall the metric server
+kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
