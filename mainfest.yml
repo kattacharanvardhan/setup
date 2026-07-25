@@ -368,4 +368,85 @@ spec:
           type: Utilization
           averageUtilization: 20
 
-15)
+15) Create ResourceQuota (limit) in dev namespace to set limit resource to create pods,cpu,memory particular namespace
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-rq
+  namespace: dev
+spec:
+  hard:
+    pods: "5"
+    limits.cpu: "1"
+    limits.memory: 2Gi
+
+16) Create ResourceQuota (limit and Request) in dev namespace to set limit resource to create pods,cpu,memory particular namespace
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-rq
+  namespace: dev
+spec:
+  hard:
+    pods: "5"
+    requests.cpu: "2"
+    requests.memory: "2Gi"
+    limits.cpu: "4"
+    limits.memory: "6Gi"
+
+17) Create Deployment and ResourceQuota (limit the resource to pods)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-dp
+  labels:
+    app: bank
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      containers:
+        - name: bank-cont
+          image: charanvardhan/internetbanking:v1
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+
+18) Create Deployment ResourceQuota (limit and Request the resource to pods)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: banking-dp
+  labels:
+    app: bank
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      containers:
+        - name: bank-cont
+          image: charanvardhan/internetbanking:v1
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
