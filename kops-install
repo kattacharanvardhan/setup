@@ -50,3 +50,5 @@ kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/lat
 apt update -y
 apt install stress -y
 stress --cpu 8 --io 4 --vm-bytes 128M --timeout 60s
+
+#kubectl request quota
