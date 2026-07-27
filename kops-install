@@ -52,3 +52,4 @@ apt install stress -y
 stress --cpu 8 --io 4 --vm-bytes 128M --timeout 60s
 
 #kubectl request quota
+# a/updatwe
