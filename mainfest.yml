@@ -602,3 +602,29 @@ Ingress Address/<path routing>
 http://a2195dc9abfeb481487dbf1b13156123-2015145340.ap-south-1.elb.amazonaws.com/
 http://a2195dc9abfeb481487dbf1b13156123-2015145340.ap-south-1.elb.amazonaws.com/nginx
 http://a2195dc9abfeb481487dbf1b13156123-2015145340.ap-south-1.elb.amazonaws.com/httpd
+
+19) Create manifest file for node selector to schedule pod in particular node with mentioned label(its hard value and its gurantee to schedule in that label attched to node only)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeselector
+  labels:
+    app: bank
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      containers:
+        - name: cont1
+          image: charanvardhan/internetbanking:v1
+      nodeSelector:
+        node-name: ib-node
+
+20) 
