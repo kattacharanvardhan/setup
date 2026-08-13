@@ -477,3 +477,128 @@ spec:
   volumes:
     - name: shared-logs
       emptyDir: {}
+
+18) Create Ingress Controller(its like path based routing) in ingress controller have path rewrites (user-lb-ingresscontroller-service-deployment)
+
+its --> nginx.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+          env:
+            - name: TITLE
+              value: "NGINX APP1"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+
+its ---> httpd.yml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpd
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+        - name: httpd
+          image: charanvardhan/internetbanking:v1
+          ports:
+            - containerPort: 80
+          env:
+            - name: TITLE
+              value: "HTTPD APP1"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd
+spec:
+  type: ClusterIP
+  selector:
+    app: httpd
+  ports:
+    - port: 80
+      targetPort: 80
+
+its ---> ingress.yml
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: k8s-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+spec:
+  ingressClassName: nginx
+
+  rules:
+    - http:
+        paths:
+
+          - path: /nginx(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+
+          - path: /httpd(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: httpd
+                port:
+                  number: 80
+
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+
+Note:
+Ingress Address/<path routing>
+http://a2195dc9abfeb481487dbf1b13156123-2015145340.ap-south-1.elb.amazonaws.com/
+http://a2195dc9abfeb481487dbf1b13156123-2015145340.ap-south-1.elb.amazonaws.com/nginx
+http://a2195dc9abfeb481487dbf1b13156123-2015145340.ap-south-1.elb.amazonaws.com/httpd
