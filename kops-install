@@ -53,3 +53,6 @@ stress --cpu 8 --io 4 --vm-bytes 128M --timeout 60s
 
 #kubectl request quota
 # a/updatwe
+
+#To Install Ingress nginx controller in k8s 
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.3.0/deploy/static/provider/cloud/deploy.yaml
