@@ -1,1 +1,16 @@
+# First Helm Install
+
+curl -fsSL -o get-helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+
+chmod 700 get-helm.sh
+
+./get-helm.sh
+
+helm version
+
+# Now Install metric server or heapster
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# Install Prometheus and Grafana using helm
 
