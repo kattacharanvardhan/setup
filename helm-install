@@ -13,3 +13,26 @@ helm version
 helm repo add argo https://argoproj.github.io/argo-helm
 
 helm repo update
+
+helm repo list  --> list out repo added
+helm search repo argo --> search for repo
+helm install argocd argo/argo-cd -n argocd --create-namespace --> create ns and install argocd in that ns in one shot
+
+kubectl get ns
+kubectl create ns argocd
+kubectl config set-context --current --namespace=argocd
+helm install argocd argo/argo-cd --namespace argocd
+
+# Expose argocd-server to loadbalancer
+
+by default argocd-server using clusterip change to loadbalancer
+
+kubectl patch svc argocd-server -n argocd -p '{"spec":{"type":"LoadBalancer"}}'
+
+kubectl get all -n argocd ==> find loadbalancer url and paste in google and login to argocd server
+
+yum install jq -y ==> install j qurey
+kubectl get svc argocd-server -n argocd -o json | jq --raw-output '.status.loadBalancer.ingress[0].hostname' ==> to find lb url in short
+
+
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d  ==> to get argocd password and username is admin by default
