@@ -725,4 +725,45 @@ spec:
           value: "gpu"
           effect: "NoSchedule"
 
-23)
+23) Create a manifest file for RBAC(Role Based Access Control) ==> Service Account, Role, RoleBinding
+
+vi serviceaccount.yml
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: charan
+  namespace: dev
+
+vi role.yml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dev-pod-reader
+  namespace: dev
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+
+vi rolebinding.yml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pod
+  namespace: dev
+subjects:
+  - kind: User (ServiceAccount or User)
+    name: charan
+    namespace: dev
+roleRef:
+  kind: Role
+  name: dev-pod-reader
+  apiGroup: rbac.authorization.k8s.io
+
+Verify its correct or not
+
+kubectl auth can-i get pods --namespace=dev --as=charan                   ===> for user
+kubectl auth can-i get pods -n dev --as=system:serviceaccount:dev:charan  ===> for service account
