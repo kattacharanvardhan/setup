@@ -12,8 +12,16 @@ helm version
 
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
-# Install Prometheus and Grafana using helm
+# Add helm repo Prometheus and Grafana using helm
 
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
 helm repo add grafana https://grafana.github.io/helm-charts
+
+helm repo update
+helm repo list
+
+# Install Prometheus and Grafana
+
+
+
