@@ -7,3 +7,9 @@ chmod 700 get-helm.sh
 ./get-helm.sh
 
 helm version
+
+# Install ARGOCD using helm
+
+helm repo add argo https://argoproj.github.io/argo-helm
+
+helm repo update
