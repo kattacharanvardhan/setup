@@ -30,3 +30,5 @@ helm install grafana grafana/grafana --namespace grafana --create-namespace --se
 # Install Loki and Promtail
 
 helm install loki grafana/loki --namespace loki --create-namespace --set deploymentMode=Monolithic --set loki.useTestSchema=true --set loki.storage.type=filesystem --set loki.storage.bucketNames.chunks=chunks --set loki.storage.bucketNames.ruler=ruler --set loki.storage.bucketNames.admin=admin --set backend.replicas=0 --set read.replicas=0 --set write.replicas=0 --set gateway.enabled=false
+
+helm install promtail grafana/promtail --namespace loki --set "config.clients[0].url=http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push"
