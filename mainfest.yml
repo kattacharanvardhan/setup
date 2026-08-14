@@ -693,3 +693,36 @@ spec:
           image: charanvardhan/internetbanking:v1
           ports:
             - containerPort: 80
+22) Create manifest file for tolerations and taints 
+
+ Taints like label key=value:effect (effect like NoSchedule,PreferredSchedule,NoExcute) [command ==> kubectl taint node <node-id> key=value:effect ] hardware=gpu:NoSchedule
+ if want to use taints in file we need to use tolerations but its not guarntedly it will created mentioned labels node it will create either node-1 or node-2
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ib-bank
+  labels:
+    app: bank
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      containers:
+        - name: ib
+          image: charanvardhan/internetbanking:v1
+          ports:
+            - containerPort: 80
+      tolerations:
+        - key: "hardware"
+          operator: "Equal"
+          value: "gpu"
+          effect: "NoSchedule"
+
+23)
