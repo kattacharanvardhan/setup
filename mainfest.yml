@@ -660,3 +660,36 @@ spec:
           image: charanvardhan/internetbanking:v1
           ports:
             - containerPort: 80
+
+21) Create a manifest file for nodeaffinity(Required type) ( Required like node selector it guratee to have mentioned label in manifest file and label should attach to node when only one pod will schedule)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ib-bank
+  labels:
+    app: bank
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-name
+                    operator: In
+                    values:
+                      - ib-node
+      containers:
+        - name: ib
+          image: charanvardhan/internetbanking:v1
+          ports:
+            - containerPort: 80
