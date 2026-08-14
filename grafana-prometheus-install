@@ -23,5 +23,5 @@ helm repo list
 
 # Install Prometheus and Grafana
 
-
+helm install prometheus prometheus-community/prometheus --namespace prometheus --create-namespace --set alertmanager.persistentVolume.storageClass="gp2" --set server.persistentVolume.storageClass="gp2"
 
