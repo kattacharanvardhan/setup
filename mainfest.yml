@@ -627,4 +627,36 @@ spec:
       nodeSelector:
         node-name: ib-node
 
-20) 
+20) Create a manifest file for nodeaffinity( Preferred type) preferred means labels there or not there to node it will guarntee to schedule pod in any one node like soft value (there and not there label pod will schedule in any one the node)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ib-deployment
+  labels:
+    app: bank
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bank
+  template:
+    metadata:
+      labels:
+        app: bank
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: node-name
+                    operator: In
+                    values:
+                      - ib-node
+      containers:
+        - name: ib
+          image: charanvardhan/internetbanking:v1
+          ports:
+            - containerPort: 80
