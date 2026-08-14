@@ -1,1 +1,9 @@
+# Helm Install
 
+curl -fsSL -o get-helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+
+chmod 700 get-helm.sh
+
+./get-helm.sh
+
+helm version
