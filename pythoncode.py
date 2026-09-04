@@ -14,4 +14,15 @@ for i in range(1,6,1):
     print("*" , end = " ")
   print("\r")
 
-# print right angle triangle 
+# print right angle triangle with number
+for i in range(1,6,1):
+  for j in range(1,i,1):
+    print(i, end = " ")
+  print("\r")
+
+# print right angle triangle with *
+for i in range(1,6,1):
+  for j in range(1,i,1):
+    print("*", end = " ")
+  print("/r")
+
