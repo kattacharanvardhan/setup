@@ -41,3 +41,21 @@ for i in range(1,6,1):
   for j in range(1,i,1):
     print("*", end = "")
   print("\r")
+
+# print big triangle with number
+for i in range(1,6,1):
+  for k in range(1,6-i,1):
+    print(end = " ")
+  for j in range(1,i,1):
+    print(i, end = " ")
+  print("\r")
+
+# print big triangle with *
+for i in range(1,6,1):
+  for k in range(1,6-i,1):
+    print(end = " ")
+  for j in range(1,i,1):
+    print("*",  end = " ")
+  print("\r")
+
+# print 
